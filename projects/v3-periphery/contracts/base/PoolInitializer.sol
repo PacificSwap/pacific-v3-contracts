@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity =0.7.6;
 
-import '@pancakeswap/v3-core/contracts/interfaces/IPancakeV3Factory.sol';
-import '@pancakeswap/v3-core/contracts/interfaces/IPancakeV3Pool.sol';
+import '@pacificswap/v3-core/contracts/interfaces/IPacificV3Factory.sol';
+import '@pacificswap/v3-core/contracts/interfaces/IPacificV3Pool.sol';
 
 import './PeripheryImmutableState.sol';
 import '../interfaces/IPoolInitializer.sol';
@@ -17,15 +17,15 @@ abstract contract PoolInitializer is IPoolInitializer, PeripheryImmutableState {
         uint160 sqrtPriceX96
     ) external payable override returns (address pool) {
         require(token0 < token1);
-        pool = IPancakeV3Factory(factory).getPool(token0, token1, fee);
+        pool = IPacificV3Factory(factory).getPool(token0, token1, fee);
 
         if (pool == address(0)) {
-            pool = IPancakeV3Factory(factory).createPool(token0, token1, fee);
-            IPancakeV3Pool(pool).initialize(sqrtPriceX96);
+            pool = IPacificV3Factory(factory).createPool(token0, token1, fee);
+            IPacificV3Pool(pool).initialize(sqrtPriceX96);
         } else {
-            (uint160 sqrtPriceX96Existing, , , , , , ) = IPancakeV3Pool(pool).slot0();
+            (uint160 sqrtPriceX96Existing, , , , , , ) = IPacificV3Pool(pool).slot0();
             if (sqrtPriceX96Existing == 0) {
-                IPancakeV3Pool(pool).initialize(sqrtPriceX96);
+                IPacificV3Pool(pool).initialize(sqrtPriceX96);
             }
         }
     }
